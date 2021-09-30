@@ -5,12 +5,16 @@
 #include <fstream>
 #include <iostream>
 #include <string>
+#include <vector>
 
-class runtime {
-    private:
-    bool bucketlistExists;
-    public:
-    runtime();
-    void fillBucketlist();
-    ~runtime();
+class Bucket {
+public:
+    Bucket();
+
+    // gets the buckets the user has in their bucketlist file.
+    std::string getBuckets();
+
+    // pulls the latest bucket repositories.
+    void fetchBuckets();
+    ~Bucket();
 };

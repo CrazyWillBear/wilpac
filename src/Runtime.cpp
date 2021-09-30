@@ -2,16 +2,16 @@
 // License, v. 2.0. If a copy of the MPL was not distributed with this
 // file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
-#include "runtime.h"
+#include "Runtime.h"
 
-runtime::runtime() {
+Runtime::Runtime() {
     FILE *file;
     if ((file = fopen("/etc/wilpac-bucketlist", "r"))) { fclose(file); } else { this->fillBucketlist(); }
 
     if ((file = fopen("/etc/wilpac-buckets", "r"))) { fclose(file); } else { std::system("mkdir -p /etc/wilpac-buckets"); }
 }
 
-void runtime::fillBucketlist() {
+void Runtime::fillBucketlist() {
     std::string text = "https://github.com/CrazyWillBear/winpac-main";
     std::fstream file;
 
@@ -25,4 +25,4 @@ void runtime::fillBucketlist() {
     file.close();
 }
 
-runtime::~runtime() { }
+Runtime::~Runtime() { }

@@ -2,16 +2,16 @@
 // License, v. 2.0. If a copy of the MPL was not distributed with this
 // file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
-#include "userinfo.h"
+#include "UserInfo.h"
 
-std::string userinfo::getUID() {
+std::string UserInfo::getUID() {
     char text[255];
     FILE *name;
     name = popen("id -u", "r");
     return fgets(text, sizeof(text), name);
 }
 
-std::string userinfo::getUsername() {
+std::string UserInfo::getUsername() {
     char text[255];
     FILE *name;
     name = popen("whoami", "r");

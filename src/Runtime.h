@@ -2,11 +2,17 @@
 // License, v. 2.0. If a copy of the MPL was not distributed with this
 // file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
+#include <fstream>
 #include <iostream>
 #include <string>
 
-class userinfo {
-    public:
-    std::string getUID();
-    std::string getUsername();
+class Runtime {
+private:
+    // if bucketlist exists, return true.
+    bool bucketlistExists;
+public:
+    Runtime();
+    // fills the bucketlist with the default repo.
+    void fillBucketlist();
+    ~Runtime();
 };
