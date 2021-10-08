@@ -13,7 +13,7 @@ int main(int argc, char **argv) {
         return 1;
     }
 
-    // if the user is in sudo, then runtime functions/tasks can be completed.
+    // if the user is admin, then runtime functions/tasks can be completed.
     Runtime();
     std::cout << Bucket().getBuckets() << "\n";
 
