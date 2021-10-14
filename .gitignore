@@ -1,2 +1,8 @@
+# Binaries are stored here, no need to
+# include binaries in git repo.
 /bin*
+
+# CLion, the IDE I use, creates a .idea
+# directory that isn't necessary or useful
+# given that a lot of people don't use it.
 /.idea*
