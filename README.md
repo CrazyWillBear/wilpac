@@ -8,7 +8,7 @@
 - Work has stagnated due to a very busy schedule on my part - I plan to continue working on `wilpac`, however it will be slow.
 
 ## Summary
-`wilpac` is a package manager, hopefully to be used in `wilcus`. For now however, it functions as a package manager for Linux.
+`wilpac` is a package manager, designed for Unix operating systems. For now however, it functions as a package manager for exclusively Linux.
 
 ## Credits
 Not many are due honestly, although Stack Overflow is always helpful ;).
