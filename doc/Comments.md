@@ -1,4 +1,4 @@
-Comments -
+# Comments
 
 Comments explaining what functions do are available in the header files.
 
