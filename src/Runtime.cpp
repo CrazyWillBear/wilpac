@@ -6,20 +6,22 @@
 
 Runtime::Runtime() {
     FILE *file;
-    if ((file = fopen("/etc/wilpac-bucketlist", "r"))) { fclose(file); } else { this->fillBucketlist(); }
 
     if ((file = fopen("/etc/wilpac-buckets", "r"))) { fclose(file); } else { std::system("mkdir -p /etc/wilpac-buckets"); }
+
+    if ((file = fopen("/etc/wilpac-buckets/fetch.sh", "r"))) { fclose(file); } else { fillBucketlist(); }
 }
 
 void Runtime::fillBucketlist() {
-    std::string text = "https://github.com/CrazyWillBear/winpac-main";
+    std::cout << "()Filling bucketlist\n";
+    std::string text = "if cd wilpac-main; then git pull; else git clone https://github.com/CrazyWillBear/wilpac-main --progress; fi";
     std::fstream file;
 
-    file.open("/etc/wilpac-bucketlist", std::ios::out);
+    file.open("/etc/wilpac-buckets/fetch.sh", std::ios::out);
 
     if (!file) { std::cerr << "()Failed to write new buckletlist\n"; } else {
         file.write(text.data(), text.size());
-        std::cout << "()Wrote default bucketlist\n";
+        std::cout << "()Wrote default bucketlist to fetch script\n";
     }
 
     file.close();

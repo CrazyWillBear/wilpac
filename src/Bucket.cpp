@@ -6,24 +6,13 @@
 
 Bucket::Bucket() { }
 
-void Bucket::fetchBuckets() {
-    std::system("pushd /etc/wilpac-buckets; find . -type d -depth 1 -exec echo git --git-dir={}/.git --work-tree=$PWD/{} status \\; popd");
-    std::cout << this->getBuckets() << "\n";
+void Bucket::getBuckets() {
+    std::cout << "()Buckets:\n";
+    std::system("cd /etc/wilpac-buckets; ls -d */");
 }
 
-std::string Bucket::getBuckets() {
-    std::fstream bucketlist;
-    bucketlist.open("/etc/wilpac-bucketlist");
-
-    std::string str;
-    bucketlist >> str;
-
-    // I've gotten this far: I'm trying to split this string, idk
-    // what to do from here.
-    std::string token = str.substr(0, str.find("\n"));
-
-    // this is here for testing reasons, ignore:
-    return str;
+void Bucket::fetchBuckets() {
+    std::system("cd /etc/wilpac-buckets; bash /etc/wilpac-buckets/fetch.sh");
 }
 
 Bucket::~Bucket() { }

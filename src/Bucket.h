@@ -12,9 +12,10 @@ public:
     Bucket();
 
     // gets the buckets the user has in their bucketlist file.
-    std::string getBuckets();
+    static void getBuckets();
 
     // pulls the latest bucket repositories.
-    void fetchBuckets();
+    static void fetchBuckets();
+
     ~Bucket();
 };
