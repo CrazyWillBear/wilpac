@@ -6,15 +6,16 @@
 #include <iostream>
 #include <string>
 #include <vector>
+#include "Colors.h"
 
 class Bucket {
 public:
     Bucket();
 
-    // gets the buckets the user has in their bucketlist file.
+    // gets the buckets the user has in their bucketlist file
     static void getBuckets();
 
-    // pulls the latest bucket repositories.
+    // pulls the latest bucket repositories
     static void fetchBuckets();
 
     ~Bucket();

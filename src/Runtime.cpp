@@ -9,19 +9,19 @@ Runtime::Runtime() {
 
     if ((file = fopen("/etc/wilpac-buckets", "r"))) { fclose(file); } else { std::system("mkdir -p /etc/wilpac-buckets"); }
 
-    if ((file = fopen("/etc/wilpac-buckets/fetch.sh", "r"))) { fclose(file); } else { fillBucketlist(); }
+    if ((file = fopen("/etc/wilpac-buckets/fetch.sh", "r"))) { fclose(file); } else { fillDefaultFetchScript(); }
 }
 
-void Runtime::fillBucketlist() {
-    std::cout << "()Filling bucketlist\n";
-    std::string text = "if cd wilpac-main; then git pull; else git clone https://github.com/CrazyWillBear/wilpac-main --progress; fi";
+void Runtime::fillDefaultFetchScript() {
+    std::cout << REG G "()Filling bucketlist..." RS;
+    std::string text = "echo \"- wilpac-main:\"; if cd wilpac-main; then git pull --progress |& sed 's/^/  /g'; else git clone https://github.com/CrazyWillBear/wilpac-main |& sed 's/^/  /g'; fi\n";
     std::fstream file;
 
     file.open("/etc/wilpac-buckets/fetch.sh", std::ios::out);
 
-    if (!file) { std::cerr << "()Failed to write new buckletlist\n"; } else {
+    if (!file) { std::cerr << REG R "()Failed to write new buckletlist" RS "\n"; } else {
         file.write(text.data(), text.size());
-        std::cout << "()Wrote default bucketlist to fetch script\n";
+        std::cout << REG G "\r()Wrote default bucketlist to fetch script" RS "\n";
     }
 
     file.close();

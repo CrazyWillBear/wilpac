@@ -7,12 +7,13 @@
 Bucket::Bucket() { }
 
 void Bucket::getBuckets() {
-    std::cout << "()Buckets:\n";
-    std::system("cd /etc/wilpac-buckets; ls -d */");
+    std::cout << REG G "()Buckets:" RS "\n";
+    std::system("cd /etc/wilpac-buckets; ls -d */ | sed 's/^/  /g'");
 }
 
 void Bucket::fetchBuckets() {
-    std::system("cd /etc/wilpac-buckets; bash /etc/wilpac-buckets/fetch.sh");
+    std::cout << REG G "()Updating buckets..." RS "\n";
+    std::system("cd /etc/wilpac-buckets; sh /etc/wilpac-buckets/fetch.sh |& sed 's/^/  /g'");
 }
 
 Bucket::~Bucket() { }

@@ -6,13 +6,15 @@
 #include <iostream>
 #include <string>
 
+#include "Colors.h"
+
 class Runtime {
 private:
-    // if bucketlist exists, return true.
+    // if bucketlist exists, return true
     bool bucketlistExists;
 public:
     Runtime();
-    // fills the bucketlist with the default repo.
-    void fillBucketlist();
+    // fills the bucketlist with the default repo
+    void fillDefaultFetchScript();
     ~Runtime();
 };
