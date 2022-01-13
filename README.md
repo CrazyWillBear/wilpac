@@ -10,7 +10,7 @@
 `wilpac` is a package manager, designed for UNIX operating systems. For now however, it functions as a package manager for exclusively Linux.
 
 ## Credits
-Not many are due honestly, although Stack Overflow is always helpful ;).
+- [hjiang/jsonxx](https://github.com/hjiang/jsonxx)
 
 ## License
 I chose the MPL 2.0 because it requires that you must use the same license, disclose me as the source, and give a copyright and license notice.

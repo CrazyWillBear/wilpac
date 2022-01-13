@@ -11,12 +11,14 @@ Commands::Commands() {
 cmds Commands::getLongOption(std::string input) {
     if (input.compare("--help") == 0) { return cmds::help; }
     if (input.compare("--fetch") == 0) { return cmds::fetch; }
+    if (input.compare("--install") == 0) { return cmds::install; }
     else { return cmds::invalid; }
 }
 
 cmds Commands::getShortOption(char input) {
     if (input == 'h') { return cmds::help; }
     if (input == 'F') { return cmds::fetch; }
+    if (input == 'I') { return cmds::install; }
     else { return cmds::invalid; }
 }
 

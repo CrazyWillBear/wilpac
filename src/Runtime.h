@@ -12,9 +12,6 @@
 #include "Colors.h"
 
 class Runtime {
-private:
-    // if bucketlist exists, return true
-    bool bucketlistExists;
 public:
     Runtime();
     // fills the bucketlist with the default repo

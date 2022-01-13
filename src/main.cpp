@@ -7,6 +7,7 @@
 
 #include "Bucket.h"
 #include "Commands.h"
+#include "Package.h"
 #include "Runtime.h"
 
 // help menu / usage function
@@ -20,6 +21,8 @@ void usage() {
 }
 
 int main(int argc, char *argv[]) {
+    Package::installPkg("/etc/wilpac-buckets/fetch.sh");
+
     // check to see if user is admin, if not operations won't work so exit
     if (geteuid() != 0) {
         std::cerr << BLD R "()Please run as root" RS "\n";
@@ -63,7 +66,12 @@ int main(int argc, char *argv[]) {
             Bucket::getBuckets();
         }
         if (operations[i] == cmds::install) {
-            
+            if (args.size() <= 1) { std::cerr << BLD R "()Not enough arguments provided for install (-h or --help for help)" RS "\n"; }
+            else if (Package::pkgExists(args[1]).compare("0") == 0) {
+                std::cerr << BLD R "()Package not found, is the package's bucket installed?" RS << "\n";
+            } else {
+                std::cout << REG G "()Package located, running install script..." RS "\n";
+            }
         }
     }
 
