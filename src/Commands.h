@@ -4,9 +4,10 @@
 
 #include <iostream>
 
-enum cmds{
+enum cmds {
     help,
     fetch,
+    install,
     invalid
 };
 
@@ -14,9 +15,18 @@ class Commands {
 public:
     Commands();
 
-    // takes input, returns corresponding enum value
-    static cmds getLongOption(std::string);
-    static cmds getShortOption(char);
+    // takes input, returns corresponding cmds value for options with '--'
+    cmds getLongOption(std::string);
+    // same thing but for options with '-', so by character
+    cmds getShortOption(char);
+
+    // takes input, returns corresponding mods value for options with '--'
+    void getLongModifier(std::string);
+    // same thing but for options with '-', so by character
+    void getShortModifier(char);
+    
+    // modifiers
+    bool all;
 
     ~Commands();
 };

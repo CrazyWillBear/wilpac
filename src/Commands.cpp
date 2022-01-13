@@ -4,7 +4,9 @@
 #include "Commands.h"
 
 
-Commands::Commands() { }
+Commands::Commands() {
+    all = false;
+}
 
 cmds Commands::getLongOption(std::string input) {
     if (input.compare("--help") == 0) { return cmds::help; }
@@ -14,8 +16,18 @@ cmds Commands::getLongOption(std::string input) {
 
 cmds Commands::getShortOption(char input) {
     if (input == 'h') { return cmds::help; }
-    if (input == 'f') { return cmds::fetch; }
+    if (input == 'F') { return cmds::fetch; }
     else { return cmds::invalid; }
+}
+
+void Commands::getLongModifier(std::string input) {
+    if (input.compare("--all") == 0) { all = true; }
+    else { return; }
+}
+
+void Commands::getShortModifier(char input) {
+    if (input == 'a') { all = true; }
+    else { return; }
 }
 
 Commands::~Commands() { }

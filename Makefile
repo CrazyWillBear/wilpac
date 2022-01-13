@@ -3,7 +3,7 @@ CFLAGS = -march=native -O2
 
 default: build run clean
 
-all: build run clean
+all: build run clean build-release install
 
 build:
 	mkdir -p ./bin/
