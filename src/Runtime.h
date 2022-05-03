@@ -9,6 +9,7 @@
 #include <iostream>
 #include <string>
 
+#include "Bucket.h"
 #include "Colors.h"
 
 class Runtime {

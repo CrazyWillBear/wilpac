@@ -1,5 +1,5 @@
 CC = clang++
-CFLAGS = -march=native -O2
+CFLAGS = -march=native
 
 default: build run clean
 

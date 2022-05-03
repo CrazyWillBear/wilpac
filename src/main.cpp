@@ -12,17 +12,15 @@
 
 // help menu / usage function
 void usage() {
-    std::cout << REG R <<
+    std::cout << REG G <<
     "()Usage: `wilpac <OPTIONS> <modifiers> <args>\n" <<
-    "\t()Options:\n" <<
+    "\t()OPTIONS:\n" <<
     "\t-I, --install <package>; install package\n" <<
     "\t-F, --fetch; fetch buckets\n" <<
     "\t-h, --help; display help and exit\n";
 }
 
 int main(int argc, char *argv[]) {
-    Package::installPkg("/etc/wilpac-buckets/fetch.sh");
-
     // check to see if user is admin, if not operations won't work so exit
     if (geteuid() != 0) {
         std::cerr << BLD R "()Please run as root" RS "\n";
@@ -47,6 +45,8 @@ int main(int argc, char *argv[]) {
 
     // create operations list
     for (int i = 0; i < argc; i ++) {
+        // if the option starts with '--' then parse it accordingly, if it's just '-' parse accordingly,
+        // otherwise add it as a program argument (helps with organization to have separate args variable)
         if (argv[i][0] == '-' && argv[i][1] == '-') {
             operations.push_back(commands.getLongOption(argv[i]));
             commands.getLongModifier(argv[i]);
@@ -69,8 +69,10 @@ int main(int argc, char *argv[]) {
             if (args.size() <= 1) { std::cerr << BLD R "()Not enough arguments provided for install (-h or --help for help)" RS "\n"; }
             else if (Package::pkgExists(args[1]).compare("0") == 0) {
                 std::cerr << BLD R "()Package not found, is the package's bucket installed?" RS << "\n";
+                return 3;
             } else {
                 std::cout << REG G "()Package located, running install script..." RS "\n";
+                Package::installPkg(args[1]);
             }
         }
     }

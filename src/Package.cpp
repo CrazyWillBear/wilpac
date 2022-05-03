@@ -16,10 +16,10 @@ std::string Package::pkgExists(std::string query) {
     while (entry != NULL)
     {
         if (entry->d_type == DT_DIR) {
-            std::string curfile = "/etc/wilpac-buckets/" + std::string(entry->d_name) + "/" + query;
+            std::string curfile = "/etc/wilpac-buckets/" + std::string(entry->d_name) + "/pkgs/" + query;
 
             if ((file = fopen(curfile.c_str(), "r"))) {
-                return "/etc/wilpac-buckets/" + std::string(entry->d_name) + "/" + query;
+                return "/etc/wilpac-buckets/" + std::string(entry->d_name) + "/pkgs/" + query;
             }
         }
         entry = readdir(dir);
@@ -30,25 +30,28 @@ std::string Package::pkgExists(std::string query) {
     return "0";
 }
 
-void Package::installPkg(std::string path) {
-    std::string line;
-    std::ifstream pkgFile(path);\
+void Package::installPkg(std::string file) {
+    // assign path variable
+    std::string path = pkgExists(file);
+    std::ifstream pkgFile(path, std::ios::in);
 
+    // return nothing if file cannot be read
     if (!pkgFile.is_open()) {
         std::cerr << BLD R "()Unable to read package file" RS "\n";
         return;
     }
 
-    std::string x;
-    std::string file;
-    while (pkgFile >> x) {
-        file += " " + x;
-    }
-    pkgFile.close();
+    // initiate start of file
+    std::string cur;
+    pkgFile >> cur;
 
-    jsonxx::Object json;
-    jsonxx::assert(json.parse(file));
-    std::cout << json.json() << "\n";
+    // read through entire file
+    do{
+        std::cout << cur << std::endl;
+        pkgFile >> cur;
+    } while (!pkgFile.eof());
+
+    pkgFile.close();
 }
 
 Package::~Package() { }

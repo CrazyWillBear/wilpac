@@ -22,6 +22,7 @@ void Runtime::fillDefaultFetchScript() {
     if (!file) { std::cerr << REG R "()Failed to write new buckletlist" RS "\n"; } else {
         file.write(text.data(), text.size());
         std::cout << REG G "\r()Wrote default bucketlist to fetch script" RS "\n";
+        Bucket::getBuckets();
     }
 
     file.close();

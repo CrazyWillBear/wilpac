@@ -8,7 +8,6 @@
 #include <dirent.h>
 #include <fstream>
 #include <iostream>
-#include <jsonxx.h>
 #include <string>
 
 #include "Colors.h"
