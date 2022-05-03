@@ -46,7 +46,7 @@ void Package::installPkg(std::string file) {
     pkgFile >> cur;
 
     // read through entire file
-    do{
+    do {
         std::cout << cur << std::endl;
         pkgFile >> cur;
     } while (!pkgFile.eof());
