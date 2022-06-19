@@ -2,25 +2,25 @@
 // License, v. 2.0. If a copy of the MPL was not distributed with this
 // file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
-#ifndef RUNTIME_H
-#define RUNTIME_H
+#ifndef PACKAGEMAN_H
+#define PACKAGEMAN_H
 
-#include <filesystem>
+#include <dirent.h>
 #include <fstream>
 #include <iostream>
+#include <ostream>
 #include <string>
 
-#include "Buckets.h"
 #include "Colors.h"
+#include "Parser.h"
 
-class Runtime {
-public:
-    Runtime();
+// returns "0" if false, returns path if true
+std::string pkgExists(std::string);
 
-    // fills the bucketlist with the default repo
-    void fillDefaultFetchScript();
+// installs package
+void installPkg(std::string);
 
-    ~Runtime() = default;
-};
+// gets checksum
+std::string getChkSum(std::string);
 
 #endif
