@@ -2,6 +2,7 @@
 # include binaries in git repo.
 /bin*
 
-# vscodium's auto generated directory,
-# no need to keep it.
+# auto generated directories, no need
+# to include in git repo
 /.vscode*
+/.idea*
