@@ -14,6 +14,7 @@ struct Package {
     std::string version;
     std::string sha256sum;
     std::vector<std::string> files;
+    std::vector<std::string> deps;
     bool installed;
 };
 

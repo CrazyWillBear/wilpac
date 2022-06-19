@@ -36,55 +36,93 @@ void installPkg(std::string pkgFile) {
     Package pkg = parser.getPkg();
 
     // check to see if package is installed
-    std::cout << "()Checking to see if package is installed..." << std::endl;
+    std::cout << REG RED "()Checking to see if package is installed..." RS;
     if (pkg.installed) {
+        std::cout << REG GRE "\r()Checking to see if package is installed..." RS << std::endl;
+
         std::string input;
         std::cout << "()Package is already installed, would you like to reinstall? (Y/N)  >>  ";
         std::getline(std::cin, input);
-        if (!std::strcmp(input.c_str(), "Y") && !std::strcmp(input.c_str(), "y") && !input.empty()) {
+
+        if (std::strcmp(input.c_str(), "Y") != 0 && std::strcmp(input.c_str(), "y") != 0 && !input.empty()) {
             std::cerr << BLD RED "()Cancelling install..." RS << std::endl;
             return;
         }
-    }
+    } else { std::cout << REG GRE "\r()Checking to see if package is installed..." RS << std::endl; }
 
     // download zip file if necessary
     bool skipDl = false;
     if (std::filesystem::exists(std::string("/var/cache/wilpac/" + pkg.name + ".zip").c_str())) {
-        std::cout << "()File exists, checking to see if old version..." << std::endl;
-        char *output;
-        FILE *fd = popen(std::string("sha256sum /var/cache/wilpac/" + pkg.name + ".zip").c_str(), "w");
-        fgets(output, 1024, fd);
-        if (std::strcmp(std::string(pkg.sha256sum + "  /var/cache/wilpac/" + pkg.name + ".zip").c_str(), output)) {
+        std::cout << REG RED "()File exists, checking to see if old version..." RS;
+
+        std::string hash = getChkSum(std::string("/var/cache/wilpac/" + pkg.name + ".zip"));
+
+        std::cout << REG GRE "\r()File exists, checking to see if old version..." RS << std::endl;
+        std::cout << "\t- Local file hash: " << hash;
+        std::cout << "\t- Source file hash: " << pkg.sha256sum << " /var/cache/wilpac/" << pkg.name << ".zip" << std::endl;
+
+        if (std::strcmp(std::string(pkg.sha256sum + "  /var/cache/wilpac/" + pkg.name + ".zip\n").c_str(), hash.c_str()) == 0) {
+            std::cout << REG GRE "()Current file up-to-date, skipping download..." RS << std::endl;
             skipDl = true;
-            std::cout << "()Current file up-to-date, skipping download..." << std::endl;
         }
     }
+
     if (!skipDl) {
-        std::cout << "()Downloading file..." << std::endl;
+        // download file
+        std::cout << REG RED "()Downloading file..." RS;
         std::system(std::string("sudo curl -L " + pkg.zipURL + " -o /var/cache/wilpac/" + pkg.name + ".zip").c_str());
-        std::cout << "()Verifying download..." << std::endl;
-        char *output;
-        FILE *fd = popen(std::string("sha256sum /var/cache/wilpac/" + pkg.name + ".zip").c_str(), "w");
-        fgets(output, 1024, fd);
-        if (!std::strcmp(std::string(pkg.sha256sum + "  /var/cache/wilpac/" + pkg.name + ".zip").c_str(), output)) {
+        std::cout << REG GRE "\r()Downloading file..." RS << std::endl;
+
+        // verify download
+        std::cout << REG RED "()Verifying download..." RS;
+
+        std::string hash = getChkSum(std::string("/var/cache/wilpac/" + pkg.name + ".zip"));
+
+        std::cout << REG GRE "\r()Verifying download..." RS << std::endl;
+
+        if (!std::strcmp(std::string(pkg.sha256sum + "  /var/cache/wilpac/" + pkg.name + ".zip\n").c_str(), hash.c_str())) {
             std::cerr << BLD RED "()Verification failed, exiting..." RS << std::endl;
             return;
         }
     }
 
     // unzip zip file
-    std::cout << "()Extracting contents..." << std::endl;
-    std::system(std::string("sudo unzip /var/cache/wilpac/" + pkg.name + ".zip").c_str());
+    std::cout << REG RED "()Extracting contents..." RS;
+    std::system(std::string("sudo unzip -u /var/cache/wilpac/" + pkg.name + ".zip > /dev/null").c_str());
+    std::cout << REG GRE "\r()Extracting contents..." RS << std::endl;
 
     // use gigachad to install
-    std::cout << "()Installing with gigachad..." << std::endl;
-    std::system(std::string("cd /var/cache/wilpac/" + pkg.name + "; gigachad install").c_str());
+    std::cout << REG RED "()Installing with gigachad..." RS << std::endl;
+    if (std::system(std::string("cd /var/cache/wilpac/" + pkg.name + " 2&> /dev/null; gigachad install").c_str()) == 0) { std::cout << REG GRE "\r()Installing with gigachad..." RS << std::endl; }
+    else {
+        std::cerr << BLD RED "()Failed to install with gigachad, is it installed? Exiting..." RS << std::endl;
+        return;
+    }
 
     // rewrite json as install completed
-    std::cout << "()Marking as complete..." << std::endl;
+    std::cout << REG RED "()Marking as complete..." RS;
     parser.rewriteCompleted(path);
+    std::cout << REG GRE "\r()Marking as complete..." RS << std::endl;
 
     // delete directory, keep zip
-    std::cout << "()Cleaning cache..." << std::endl;
+    std::cout << REG RED "()Cleaning cache..." RS;
     std::system(std::string("sudo rm -rf /var/cache/wilpac/" + pkg.name).c_str());
+    std::cout << REG GRE "\r()Cleaning cache..." RS << std::endl;
+}
+
+std::string getChkSum(std::string file) {
+    char buffer[128];
+    std::string result = "";
+    FILE* pipe = popen(std::string("sha256sum " + file).c_str(), "r");
+    if (!pipe) throw std::runtime_error("popen() failed!");
+    try {
+        while (fgets(buffer, sizeof buffer, pipe) != NULL) {
+            result += buffer;
+        }
+    } catch (...) {
+        pclose(pipe);
+        throw;
+    }
+    pclose(pipe);
+    return result;
 }

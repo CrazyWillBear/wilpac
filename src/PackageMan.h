@@ -20,4 +20,7 @@ std::string pkgExists(std::string);
 // installs package
 void installPkg(std::string);
 
+// gets checksum
+std::string getChkSum(std::string);
+
 #endif

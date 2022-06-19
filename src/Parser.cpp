@@ -20,6 +20,10 @@ Parser::Parser(std::string jsonFile) {
     } catch (std::exception &ex) {
         std::cerr << BLD RED "()Error with package json file" RS << std::endl;
     }
+    try {
+        nlohmann::json deps = json["deps"];
+        for (auto dep = deps.begin(); dep != deps.end(); dep++) { this->pkg.files.push_back(dep.value()); }
+    } catch (std::exception &ex) { }
 }
 
 void Parser::rewriteCompleted(std::string jsonFile) {
