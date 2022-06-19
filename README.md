@@ -17,7 +17,7 @@
 I chose the MPL 2.0 because it requires that you must use the same license, disclose me as the source, and give a copyright and license notice.
 
 ## How to Use
-Don't! This is unfinished, but if you would like to run it, just use `make build-release` and the binary will appear in the `bin/` directory.
+Don't! This is unfinished, but if you would like to run it, just use cmake.
 
 ## Dependencies
 - [unzip](http://infozip.sourceforge.net/UnZip.html)
