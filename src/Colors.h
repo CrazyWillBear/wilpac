@@ -12,8 +12,8 @@
 #define BLD "\e[1;"
 
 //  Colors (USE WITH PREFIX)
-#define R "31m"
-#define G "32m"
+#define RED "31m"
+#define GRE "32m"
 
 // Reset (USE TO RESET COLORS AND TEXT FORMATTING TO DEFAULT)
 #define RS "\e[0m"

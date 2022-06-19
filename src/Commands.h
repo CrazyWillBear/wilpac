@@ -16,7 +16,7 @@ enum cmds {
 
 class Commands {
 public:
-    Commands();
+    Commands() { all = false; }
 
     // takes input, returns corresponding cmds value for options with '--'
     cmds getLongOption(std::string);
@@ -31,7 +31,7 @@ public:
     // modifiers
     bool all;
 
-    ~Commands();
+    ~Commands() = default;
 };
 
 #endif

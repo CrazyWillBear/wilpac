@@ -2,27 +2,22 @@
 // License, v. 2.0. If a copy of the MPL was not distributed with this
 // file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
-#ifndef BUCKET_H
-#define BUCKET_H
+#ifndef PACKAGEMAN_H
+#define PACKAGEMAN_H
 
+#include <dirent.h>
 #include <fstream>
 #include <iostream>
+#include <ostream>
 #include <string>
-#include <vector>
 
 #include "Colors.h"
+#include "Parser.h"
 
-class Bucket {
-public:
-    Bucket();
+// returns "0" if false, returns path if true
+std::string pkgExists(std::string);
 
-    // gets the buckets the user has in their bucketlist file
-    static void getBuckets();
-
-    // pulls the latest bucket repositories
-    static void fetchBuckets();
-
-    ~Bucket();
-};
+// installs package
+void installPkg(std::string);
 
 #endif

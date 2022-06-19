@@ -5,14 +5,14 @@
 #include <unistd.h>
 #include <vector>
 
-#include "Bucket.h"
+#include "Buckets.h"
 #include "Commands.h"
-#include "Package.h"
+#include "PackageMan.h"
 #include "Runtime.h"
 
 // help menu / usage function
 void usage() {
-    std::cout << REG G <<
+    std::cout << REG GRE <<
     "()Usage: `wilpac <OPTIONS> <modifiers> <args>\n" <<
     "\t()OPTIONS:\n" <<
     "\t-I, --install <package>; install package\n" <<
@@ -23,13 +23,13 @@ void usage() {
 int main(int argc, char *argv[]) {
     // check to see if user is admin, if not operations won't work so exit
     if (geteuid() != 0) {
-        std::cerr << BLD R "()Please run as root" RS "\n";
+        std::cerr << BLD RED "()Please run as root" RS << std::endl;
         return 1;
     }
 
     // check to see if args have been provided, if not exit with error
     if (argc <= 1) {
-        std::cerr << BLD R "()Not enough arguments provided (-h or --help for help)" RS "\n";
+        std::cerr << BLD RED "()Not enough arguments provided (-h or --help for help)" RS << std::endl;
         return 2;
     }
 
@@ -62,17 +62,17 @@ int main(int argc, char *argv[]) {
     for (int i = 0; i < operations.size(); i++) {
         if (operations[i] == cmds::help) { usage(); }
         if (operations[i] == cmds::fetch) {
-            Bucket::fetchBuckets();
-            Bucket::getBuckets();
+            fetchBuckets();
+            getBuckets();
         }
         if (operations[i] == cmds::install) {
-            if (args.size() <= 1) { std::cerr << BLD R "()Not enough arguments provided for install (-h or --help for help)" RS "\n"; }
-            else if (Package::pkgExists(args[1]).compare("0") == 0) {
-                std::cerr << BLD R "()Package not found, is the package's bucket installed?" RS << "\n";
+            if (args.size() <= 1) { std::cerr << BLD RED "()Not enough arguments provided for install (-h or --help for help)" RS "\n"; }
+            else if (pkgExists(std::string(args[1] + ".json")).compare("0") == 0) {
+                std::cerr << BLD RED "()Package not found, is the package's bucket installed?" RS << "\n";
                 return 3;
             } else {
-                std::cout << REG G "()Package located, running install script..." RS "\n";
-                Package::installPkg(args[1]);
+                std::cout << REG GRE "()Package located, running install script..." RS "\n";
+                installPkg(std::string(args[1] + ".json"));
             }
         }
     }

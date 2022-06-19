@@ -2,25 +2,28 @@
 // License, v. 2.0. If a copy of the MPL was not distributed with this
 // file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
-#ifndef RUNTIME_H
-#define RUNTIME_H
+#ifndef PARSER_H
+#define PARSER_H
 
-#include <filesystem>
 #include <fstream>
 #include <iostream>
-#include <string>
+#include <nlohmann/json.hpp>
+#include <sstream>
 
-#include "Buckets.h"
 #include "Colors.h"
+#include "Package.h"
 
-class Runtime {
+class Parser {
+private:
+    Package pkg;
+
 public:
-    Runtime();
+    Parser(std::string);
 
-    // fills the bucketlist with the default repo
-    void fillDefaultFetchScript();
+    Package getPkg() { return this->pkg; }
+    void rewriteCompleted(std::string);
 
-    ~Runtime() = default;
+    ~Parser() = default;
 };
 
 #endif

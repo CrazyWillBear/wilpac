@@ -4,9 +4,6 @@
 
 #include "Commands.h"
 
-Commands::Commands() {
-    all = false;
-}
 
 cmds Commands::getLongOption(std::string input) {
     if (input.compare("--help") == 0) { return cmds::help; }
@@ -31,5 +28,3 @@ void Commands::getShortModifier(char input) {
     if (input == 'a') { all = true; }
     else { return; }
 }
-
-Commands::~Commands() { }

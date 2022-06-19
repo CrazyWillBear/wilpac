@@ -1,0 +1,1 @@
+/usr/bin/c++  -lcurlpp -g   CMakeFiles/wilpac.dir/src/Commands.cpp.o CMakeFiles/wilpac.dir/src/main.cpp.o CMakeFiles/wilpac.dir/src/PackageMan.cpp.o CMakeFiles/wilpac.dir/src/Parser.cpp.o CMakeFiles/wilpac.dir/src/Runtime.cpp.o  -o wilpac 
