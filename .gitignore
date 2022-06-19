@@ -1,6 +1,6 @@
 # Binaries are stored here, no need to
 # include binaries in git repo.
-/bin*
+/cmake-build-debug*
 
 # auto generated directories, no need
 # to include in git repo
