@@ -1,7 +1,6 @@
 cmake_minimum_required(VERSION 3.16)
 project(wilpac)
 
-SET (CMAKE_CXX_FLAGS                "-lcurlpp")
 SET (CMAKE_CXX_FLAGS_RELEASE_INIT   "-o3 =DNDEBUG")
 
 set(CMAKE_CXX_STANDARD 17)

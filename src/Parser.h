@@ -20,7 +20,9 @@ private:
 public:
     Parser(std::string);
 
+    // parses JSON package info and returns a Package
     Package getPkg() { return this->pkg; }
+    // rewrites the package's JSON file to be marked as completed
     void rewriteCompleted(std::string);
 
     ~Parser() = default;
