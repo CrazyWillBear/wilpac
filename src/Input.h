@@ -2,21 +2,30 @@
 // License, v. 2.0. If a copy of the MPL was not distributed with this
 // file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
-#ifndef COMMANDS_H
-#define COMMANDS_H
+#ifndef INPUT_H
+#define INPUT_H
 
 #include <iostream>
+#include <string>
 
 enum cmds {
+    // commands
     help,
     fetch,
     install,
+    update_all,
+
+    // options
+    silent,
+    verbose,
+
+    // nothing
     invalid
 };
 
-class Commands {
+class Input {
 public:
-    Commands() { all = false; }
+    Input() { all = false; }
 
     // takes input, returns corresponding cmds value for options with '--'
     cmds getLongOption(std::string);
@@ -27,11 +36,16 @@ public:
     void getLongModifier(std::string);
     // same thing but for options with '-', so by character
     void getShortModifier(char);
+
+    // get input
+    static std::string getInput(std::string);
+    // confirm option
+    static bool confOpt(std::string);
     
     // modifiers
     bool all;
 
-    ~Commands() = default;
+    ~Input() = default;
 };
 
 #endif

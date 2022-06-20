@@ -6,7 +6,7 @@
 #include <vector>
 
 #include "Buckets.h"
-#include "Commands.h"
+#include "Input.h"
 #include "PackageMan.h"
 #include "Runtime.h"
 
@@ -37,7 +37,7 @@ int main(int argc, char *argv[]) {
     Runtime();
 
     // create Commands object
-    Commands commands;
+    Input input;
 
     // create list of operations to be performed and new arglist (args without '-' or '--')
     std::vector<cmds> operations;
@@ -48,32 +48,42 @@ int main(int argc, char *argv[]) {
         // if the option starts with '--' then parse it accordingly, if it's just '-' parse accordingly,
         // otherwise add it as a program argument (helps with organization to have separate args variable)
         if (argv[i][0] == '-' && argv[i][1] == '-') {
-            operations.push_back(commands.getLongOption(argv[i]));
-            commands.getLongModifier(argv[i]);
+            operations.push_back(input.getLongOption(argv[i]));
+            input.getLongModifier(argv[i]);
         } if (argv[i][0] == '-') {
             for (int j = 1; j < std::string(argv[i]).length(); j++) {
-                operations.push_back(commands.getShortOption(argv[i][j]));
-                commands.getShortModifier(argv[i][j]);
+                operations.push_back(input.getShortOption(argv[i][j]));
+                input.getShortModifier(argv[i][j]);
             }
         } else { args.push_back(argv[i]); }
+    }
+
+    // set paramaters
+    bool silent = false;
+    bool verbose = false;
+    for (int i = 0; i < operations.size(); i++) {
+        if (operations[i] == cmds::silent) { silent = true; }
+        else if (operations[i] == cmds::verbose) { verbose = true; }
     }
 
     // execute operations
     for (int i = 0; i < operations.size(); i++) {
         if (operations[i] == cmds::help) { usage(); }
-        if (operations[i] == cmds::fetch) {
+        else if (operations[i] == cmds::fetch) {
             fetchBuckets();
             getBuckets();
-        }
-        if (operations[i] == cmds::install) {
+        } else if (operations[i] == cmds::install) {
             if (args.size() <= 1) { std::cerr << BLD RED "()Not enough arguments provided for install (-h or --help for help)" RS "\n"; }
             else if (pkgExists(std::string(args[1] + ".json")).compare("0") == 0) {
                 std::cerr << BLD RED "()Package not found, is the package's bucket installed?" RS << "\n";
                 return 3;
             } else {
-                std::cout << REG GRE "()Package located, running install script..." RS "\n";
-                installPkg(std::string(args[1] + ".json"));
+                if (!silent) std::cout << REG GRE "()Package located, running install script..." RS "\n";
+                installPkg(pkgExists(std::string(args[1] + ".json")), (silent ? false : true));
             }
+        } else if (operations[i] == cmds::update_all) {
+            if (verbose) std::cout << "()Verbose update" << std::endl;
+            updateAll(verbose);
         }
     }
 

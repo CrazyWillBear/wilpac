@@ -6,3 +6,6 @@
 # to include in git repo
 /.vscode*
 /.idea*
+
+# sometimes created
+/wilpac-main*

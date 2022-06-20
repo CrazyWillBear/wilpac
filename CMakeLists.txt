@@ -10,9 +10,10 @@ include_directories(src)
 add_executable(wilpac
         src/Buckets.h
         src/Colors.h
-        src/Commands.cpp
-        src/Commands.h
+        src/Input.cpp
+        src/Input.h
         src/main.cpp
+        src/Output.h
         src/Package.h
         src/PackageMan.cpp
         src/PackageMan.h
