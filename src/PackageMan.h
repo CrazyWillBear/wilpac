@@ -12,13 +12,17 @@
 #include <string>
 
 #include "Colors.h"
+#include "Input.h"
+#include "Output.h"
 #include "Parser.h"
 
 // returns "0" if false, returns path if true
 std::string pkgExists(std::string);
 
 // installs package
-void installPkg(std::string);
+void installPkg(std::string, bool, bool = false);
+// updates all installed packages
+void updateAll(bool);
 
 // gets checksum
 std::string getChkSum(std::string);
