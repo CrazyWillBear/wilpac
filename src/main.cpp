@@ -78,7 +78,6 @@ int main(int argc, char *argv[]) {
                 std::cerr << BLD RED "()Package not found, is the package's bucket installed?" RS << "\n";
                 return 3;
             } else {
-                if (!silent) std::cout << REG GRE "()Package located, running install script..." RS "\n";
                 installPkg(pkgExists(std::string(args[1] + ".json")), (silent ? false : true));
             }
         } else if (operations[i] == cmds::update_all) {

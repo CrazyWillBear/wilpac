@@ -39,7 +39,7 @@ void installPkg(std::string path, bool verbose, bool updating) {
     }
 
     // introduce package
-    std::cout << "()Installing " << pkg.name << "..." << std::endl;
+    if (updating) std::cout << "()Installing " << pkg.name << "..." << std::endl;
 
     // check to see if package is installed
     if (verbose) introTask("()Checking to see if package is installed...");
