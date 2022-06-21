@@ -74,7 +74,7 @@ void installPkg(std::string path, bool verbose, bool updating) {
     if (!skipDl) {
         // download file
         if (verbose) introTask("()Downloading file...");
-        std::system(std::string("sudo curl -L " + pkg.zipURL + " -o /var/cache/wilpac/" + pkg.name + ".zip").c_str());
+        std::system(std::string("curl -L " + pkg.zipURL + " -o /var/cache/wilpac/" + pkg.name + ".zip").c_str());
         if (verbose) outroTask("()Downloading file...");
 
         // verify download
@@ -92,7 +92,7 @@ void installPkg(std::string path, bool verbose, bool updating) {
 
     // unzip zip file
     if (verbose) introTask("()Extracting contents...");
-    std::system(std::string("sudo unzip -u /var/cache/wilpac/" + pkg.name + ".zip > /dev/null").c_str());
+    std::system(std::string("unzip -u /var/cache/wilpac/" + pkg.name + ".zip > /dev/null").c_str());
     if (verbose) outroTask("()Extracting contents...");
 
     // use gigachad to install
@@ -110,7 +110,7 @@ void installPkg(std::string path, bool verbose, bool updating) {
 
     // delete directory, keep zip
     if (verbose) introTask("()Cleaning cache...");
-    std::system(("sudo rm -rf /var/cache/wilpac/" + pkg.name).c_str());
+    std::system(("rm -rf /var/cache/wilpac/" + pkg.name).c_str());
     if (verbose) outroTask("()Cleaning cache...");
 }
 
