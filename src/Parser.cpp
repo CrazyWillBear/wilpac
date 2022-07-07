@@ -12,7 +12,6 @@ Parser::Parser(std::string jsonFile) {
         this->pkg.name = json["name"];
         this->pkg.zipURL = json["zipURL"];
         this->pkg.version = json["version"];
-        this->pkg.installed = json["installed"];
         this->pkg.sha256sum = json["sha256sum"];
 
         nlohmann::json files = json["files"];
@@ -26,11 +25,30 @@ Parser::Parser(std::string jsonFile) {
     } catch (std::exception &ex) { }
 }
 
-void Parser::rewriteCompleted(std::string jsonFile) {
+void Parser::markCompleted(std::string jsonFile) {
+    std::ifstream file(jsonFile, std::ios::in);
+    nlohmann::json jsonIn;
+    nlohmann::json jsonOut;
+    file >> jsonIn;
+    jsonOut["name"] = jsonIn["name"];
+    jsonOut["pkgPath"] = jsonFile;
+    jsonOut["version"] = jsonIn["version"];
+
+    std::string newFile = "/etc/wilpac-buckets/installed/" + std::string(jsonIn["name"]) + ".json";
+    std::ofstream newFileStream(newFile, std::ios::out);
+    newFileStream << jsonOut.dump();
+}
+
+PackageStat Parser::getPkgStat(std::string jsonFile) {
+    PackageStat r;
+
     std::ifstream file(jsonFile, std::ios::in);
     nlohmann::json json;
     file >> json;
-    json["installed"] = true;
-    std::ofstream newFile(jsonFile, std::ios::out);
-    newFile << json.dump();
+
+    r.name = json["name"];
+    r.pkgPath = json["pkgPath"];
+    r.version = json["version"];
+
+    return r;
 }

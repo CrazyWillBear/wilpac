@@ -12,18 +12,23 @@
 
 #include "Colors.h"
 #include "Package.h"
+#include "PackageStat.h"
 
 class Parser {
 private:
     Package pkg;
 
 public:
+    Parser() = default;
     Parser(std::string);
 
     // parses JSON package info and returns a Package
     Package getPkg() { return this->pkg; }
     // rewrites the package's JSON file to be marked as completed
-    void rewriteCompleted(std::string);
+    void markCompleted(std::string);
+
+    // parses JSON package stat and returns PackageStat
+    PackageStat getPkgStat(std::string);
 
     ~Parser() = default;
 };

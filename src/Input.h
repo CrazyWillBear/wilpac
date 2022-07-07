@@ -13,11 +13,12 @@ enum cmds {
     help,
     fetch,
     install,
+    uninstall,
     update_all,
 
     // options
     silent,
-    verbose,
+    alldeps,
 
     // nothing
     invalid
@@ -40,7 +41,7 @@ public:
     // get input
     static std::string getInput(std::string);
     // confirm option
-    static bool confOpt(std::string);
+    static bool confOpt(std::string, bool yesDominant = true);
     
     // modifiers
     bool all;
