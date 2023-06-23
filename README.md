@@ -11,7 +11,7 @@
 
 ## Credits
 - [nlohmann/json](https://github.com/nlohmann/json)
-- [gloggers99/gigachad](https://gitlab.com/gloggers99/gigachad)
+- [gloggers99/sabr](https://gitlab.com/gloggers99/sabr)
 
 ## License
 I chose the MPL 2.0 because it requires that you must use the same license, disclose me as the source, and give a copyright and license notice.
@@ -21,5 +21,5 @@ Don't! This is unfinished, but if you would like to run it, just use cmake.
 
 ## Dependencies
 - [unzip](http://infozip.sourceforge.net/UnZip.html)
-- [gloggers99/gigachad](https://gitlab.com/gloggers99/gigachad)
+- [gloggers99/sabr](https://gitlab.com/gloggers99/sabr)
 - [cURL](https://curl.se/)

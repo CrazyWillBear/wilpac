@@ -101,10 +101,10 @@ void installPkg(std::string path, bool verbose, bool updating) {
     if (verbose) outroTask("()Extracting contents...");
 
     // use gigachad to install
-    if (verbose) introTask("()Installing with gigachad...");
-    if (std::system(std::string("cd /var/cache/wilpac/" + pkg.name + " 2&> /dev/null; gigachad install").c_str()) == 0) { if (verbose) outroTask("()Installing with gigachad..."); }
+    if (verbose) introTask("()Installing with sabr...");
+    if (std::system(std::string("cd /var/cache/wilpac/" + pkg.name + " 2&> /dev/null; sabr install").c_str()) == 0) { if (verbose) outroTask("()Installing with sabr..."); }
     else {
-        std::cerr << BLD RED "\n()Failed to install with gigachad, is it installed? Exiting..." RS << std::endl;
+        std::cerr << BLD RED "\n()Failed to install with sabr, is it installed? Exiting..." RS << std::endl;
         return;
     }
 

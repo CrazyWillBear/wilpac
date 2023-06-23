@@ -1,0 +1,11 @@
+{
+  "name": "wilpac",
+  "binary": "wilpac",
+  "sources": [
+    "src/Input.cpp",
+    "src/main.cpp",
+    "src/PackageMan.cpp",
+    "src/Parser.cpp",
+    "src/Runtime.cpp"
+  ]
+}
