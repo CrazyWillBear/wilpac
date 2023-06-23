@@ -15,9 +15,18 @@ void usage() {
     std::cout << REG GRE <<
     "()Usage: `wilpac <OPTIONS> <modifiers> <args>\n" <<
     "\t()OPTIONS:\n" <<
-    "\t-I, --install <package>; install package\n" <<
+    "\t-I, --install; install package\n" <<
     "\t-F, --fetch; fetch buckets\n" <<
-    "\t-h, --help; display help and exit\n";
+    "\t-U, --updateall; update all packages\n" <<
+    "\t-R, --remove; remove a package\n\n" <<
+    "\t()MODIFIERS:\n" <<
+    "\t-a, --all-deps; remove all dependencies alongside a package\n" <<
+    "\t-s, --silent; disable verbosity\n" <<
+    "\t-h, --help; display help and exit\n\n" <<
+    "\t()EXAMPLES:\n" <<
+    "\t-FU; full system update\n" <<
+    "\t-Ra <package>; fully remove package\n" <<
+    "\t-I <package>; install package" << std::endl;
 }
 
 int main(int argc, char *argv[]) {
@@ -60,10 +69,11 @@ int main(int argc, char *argv[]) {
 
     // set paramaters
     bool silent = false;
-    bool verbose = false;
+    bool alldeps = false;
+
     for (int i = 0; i < operations.size(); i++) {
         if (operations[i] == cmds::silent) { silent = true; }
-        else if (operations[i] == cmds::verbose) { verbose = true; }
+        else if (operations[i] == cmds::alldeps) { alldeps = true; }
     }
 
     // execute operations
@@ -73,17 +83,24 @@ int main(int argc, char *argv[]) {
             fetchBuckets();
             getBuckets();
         } else if (operations[i] == cmds::install) {
-            if (args.size() <= 1) { std::cerr << BLD RED "()Not enough arguments provided for install (-h or --help for help)" RS "\n"; }
-            else if (pkgExists(std::string(args[1] + ".json")).compare("0") == 0) {
-                std::cerr << BLD RED "()Package not found, is the package's bucket installed?" RS << "\n";
+            if (args.size() <= 1) {
+                std::cerr << BLD RED "()Not enough arguments provided for install (-h or --help for help)" RS << std::endl;
+            }
+            else if (pkgExists(std::string(args[1] + ".json")) == "0") {
+                std::cerr << BLD RED "()Package not found, is the package's bucket installed?" RS << std::endl;
                 return 3;
             } else {
-                if (!silent) std::cout << REG GRE "()Package located, running install script..." RS "\n";
                 installPkg(pkgExists(std::string(args[1] + ".json")), (silent ? false : true));
             }
+        } else if (operations[i] == cmds::uninstall) {
+            if (!pkgInstalled(std::string(args[1] + ".json"))) {
+                std::cerr << BLD RED "()Package not found, is it installed?" RS << std::endl;
+                return 4;
+            }
+            removePkg(std::string(args[1] + ".json"), (silent ? false : true), alldeps);
         } else if (operations[i] == cmds::update_all) {
-            if (verbose) std::cout << "()Verbose update" << std::endl;
-            updateAll(verbose);
+            if (!silent) std::cout << "()Verbose update (silent tag not detected)" << std::endl;
+            updateAll(!silent);
         }
     }
 

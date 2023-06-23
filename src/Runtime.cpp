@@ -9,6 +9,8 @@ Runtime::Runtime() {
 
     if (!std::filesystem::exists("/var/cache/wilpac/")) { std::system("mkdir -p /var/cache/wilpac/"); }
 
+    if (!std::filesystem::exists("/etc/wilpac-buckets/installed")) { std::system("mkdir -p /etc/wilpac-buckets/installed"); }
+
     if (!std::filesystem::exists("/etc/wilpac-buckets/fetch.sh")) {
         fillDefaultFetchScript();
         fetchBuckets();

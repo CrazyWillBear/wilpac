@@ -25,6 +25,11 @@ std::string pkgExists(std::string query) {
     return "0";
 }
 
+bool pkgInstalled(std::string query) {
+    if (std::filesystem::exists("/etc/wilpac-buckets/installed/" + query)) { return true; }
+    return false;
+}
+
 void installPkg(std::string path, bool verbose, bool updating) {
     // parse package
     Parser parser(path);
@@ -39,11 +44,11 @@ void installPkg(std::string path, bool verbose, bool updating) {
     }
 
     // introduce package
-    std::cout << "()Installing " << pkg.name << "..." << std::endl;
+    if (updating) std::cout << "()Installing " << pkg.name << "..." << std::endl;
 
     // check to see if package is installed
     if (verbose) introTask("()Checking to see if package is installed...");
-    if (pkg.installed) {
+    if (pkgInstalled(pkg.name)) {
         if (verbose) outroTask("()Checking to see if package is installed...");
 
         if (!updating) {
@@ -103,55 +108,85 @@ void installPkg(std::string path, bool verbose, bool updating) {
         return;
     }
 
-    // rewrite json as install completed
+    // create pkgStat json file to mark install completed
     if (verbose) introTask("()Marking as complete...");
-    parser.rewriteCompleted(path);
+    parser.markCompleted(path);
     if (verbose) outroTask("()Marking as complete...");
 
     // delete directory, keep zip
     if (verbose) introTask("()Cleaning cache...");
     std::system(("rm -rf /var/cache/wilpac/" + pkg.name).c_str());
     if (verbose) outroTask("()Cleaning cache...");
+
+    for (std::string dep : pkg.deps) {
+        installPkg(dep, verbose, updating);
+    }
 }
 
 void updateAll(bool verbose) {
-    std::vector<std::string> installedPkgs;
-    std::string listPkgs;
+    std::vector<PackageStat> listPkgs;
+    std::string listPkgsStr;
+    int count = 0;
 
-    const char* PATH = "/etc/wilpac-buckets";
-    DIR *dir = opendir(PATH);
+    const std::filesystem::directory_iterator end{} ;
 
-    struct dirent *entry = readdir(dir);
-
-    while (entry != NULL)
-    {
-        if (entry->d_type == DT_DIR) {
-            if (std::filesystem::exists("/etc/wilpac-buckets/" + std::string(entry->d_name) + "/pkgs")) {
-                DIR *curDir = opendir(("/etc/wilpac-buckets/" + std::string(entry->d_name) + "/pkgs").c_str());
-                struct dirent *curEntry;
-                while ((curEntry = readdir(curDir)) != NULL) {
-                    try {
-                        Parser parser("/etc/wilpac-buckets/" + std::string(entry->d_name) + "/pkgs/" + curEntry->d_name);
-                        Package pkg = parser.getPkg();
-                        if (pkg.installed == true) {
-                            installedPkgs.push_back("/etc/wilpac-buckets/" + std::string(entry->d_name) + "/pkgs/" + curEntry->d_name);
-                            std::string pkgName = std::string(curEntry->d_name) ;
-                            listPkgs += "\n\t- '" + pkgName.replace(pkgName.end() - 5, pkgName.end(), "") + "'";
-                        }
-                    } catch (std::exception ex) { }
-                }
-            }
+    for (std::filesystem::directory_iterator iter{ std::filesystem::path("/etc/wilpac-buckets/installed") }; iter != end; iter++) {
+        Parser parser;
+        PackageStat pkgStat = parser.getPkgStat(iter->path().string());
+        if (std::filesystem::is_regular_file(*iter) && pkgStat.version != Parser(parser.getPkgStat(iter->path().string()).pkgPath).getPkg().version) {
+            listPkgs.push_back(pkgStat);
+            listPkgsStr += (count % 3 == 0 ? "\n\t- " : " ") + pkgStat.name;
         }
-        entry = readdir(dir);
     }
 
-    if (!Input::confOpt("()Would you like to update all the following packages? " + listPkgs + "\n")) {
+    if (listPkgs.empty()) {
+        std::cerr << "()No packages to update, exiting..." << std::endl;
+        return;
+    }
+
+    if (!Input::confOpt("()Would you like to update all the following packages? " + listPkgsStr)) {
         std::cerr << BLD RED "()Cancelling update all..." RS << std::endl;
         return;
     }
-    for (std::string pkg : installedPkgs) { installPkg(pkg, verbose, true); }
+    for (PackageStat pkg : listPkgs) { installPkg(pkg.pkgPath, verbose, true); }
+}
 
-    closedir(dir);
+void removePkg(std::string path, bool verbose, bool allDeps) {
+    if (verbose) introTask("()Parsing package files...");
+    Parser parser;
+    PackageStat pkgStat = parser.getPkgStat(std::string("/etc/wilpac-buckets/installed/" + path));
+
+    parser = Parser(pkgStat.pkgPath);
+    Package pkg = parser.getPkg();
+    if (verbose) outroTask("()Parsing package files...");
+
+    if (verbose) introTask("()Removing unneeded dependencies...");
+    if (allDeps) {
+        for (std::string dep : pkg.deps) {
+            const std::filesystem::directory_iterator end{} ;
+
+            for (std::filesystem::directory_iterator iter{ std::filesystem::path("/etc/wilpac-buckets/installed") }; iter != end; iter++) {
+                
+
+                bool removeable = true;
+                std::cout << "Attempting to parse " << pkgStat.pkgPath << std::endl;
+                for (std::string depTmp : Parser(pkgStat.pkgPath).getPkg().deps) {
+                    if (depTmp == dep) { removeable = false; }
+                }
+                if (removeable) {
+                    std::cout << "Attempting to remove " << iter->path().string() << std::endl;
+                    removePkg(iter->path().string(), verbose, true);
+                }
+            }
+        }
+    }
+    if (verbose) outroTask("()Removing unneeded dependencies...");
+
+    if (verbose) introTask("()Deleting program files...");
+    for (std::string file : pkg.files) { std::filesystem::remove(file); }
+    if (verbose) outroTask("()Deleting program files...");
+
+    std::filesystem::remove(std::string("/etc/wilpac-buckets/installed/" + path));
 }
 
 std::string getChkSum(std::string file) {
